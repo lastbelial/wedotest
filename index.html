@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Тест LEGO Education WeDo 2.0</title>
+<style>
+:root{
+  --bg:#f4f8ff; --card:#fff; --text:#15233a; --muted:#65758b;
+  --blue:#1976d2; --blue2:#0d5cad; --line:#d9e6f5; --ok:#16834a; --bad:#c43d3d;
+  --shadow:0 16px 45px rgba(40,75,120,.13)
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(180deg,#eaf4ff 0,#f7faff 38%,#f3f6fb 100%);color:var(--text);min-height:100vh}
+button{font:inherit}
+.wrap{width:min(900px,calc(100% - 28px));margin:0 auto;padding:26px 0 44px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:900;font-size:clamp(19px,3vw,28px)}
+.brand-badge{width:48px;height:48px;border-radius:14px;background:#ffd51b;display:grid;place-items:center;box-shadow:0 7px 18px rgba(132,110,0,.2);font-weight:1000;color:#183c77}
+.small{font-size:13px;color:var(--muted)}
+.card{background:var(--card);border:1px solid rgba(130,160,200,.24);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+.header{padding:22px 24px 15px;border-bottom:1px solid var(--line)}
+.progress-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.progress-label{font-weight:800;color:var(--blue2)}
+.progress{height:12px;background:#e8f0fa;border-radius:20px;overflow:hidden}
+.bar{height:100%;width:0;background:linear-gradient(90deg,#1a7bd7,#34a3ff);border-radius:20px;transition:width .25s ease}
+.content{padding:24px}
+.question{font-size:clamp(22px,4vw,31px);line-height:1.23;font-weight:900;margin:0 0 20px}
+.image-box{background:#fafcff;border:1px solid var(--line);border-radius:18px;min-height:200px;display:flex;align-items:center;justify-content:center;padding:14px;margin:0 0 20px;overflow:hidden}
+.image-box img{display:block;max-width:100%;max-height:360px;object-fit:contain}
+.image-fallback{display:none;text-align:center;color:var(--muted);padding:28px;font-weight:700}
+.answers{display:grid;gap:12px}
+.answer{width:100%;border:2px solid #d8e5f3;background:#fff;border-radius:17px;padding:17px 18px;text-align:left;font-size:18px;font-weight:750;color:var(--text);cursor:pointer;transition:.12s;display:flex;align-items:center;gap:13px}
+.answer:hover{border-color:#80b7ea;background:#f6fbff;transform:translateY(-1px)}
+.answer.selected{border-color:var(--blue);background:#eaf5ff;box-shadow:0 0 0 3px rgba(25,118,210,.09)}
+.letter{flex:0 0 36px;height:36px;border-radius:11px;background:#eaf1f8;display:grid;place-items:center;font-weight:900;color:#33516f}
+.answer.selected .letter{background:var(--blue);color:#fff}
+.nav{display:flex;justify-content:space-between;gap:12px;padding:18px 24px 24px}
+.btn{border:0;border-radius:14px;padding:14px 20px;font-weight:900;cursor:pointer;font-size:16px}
+.btn.secondary{background:#edf2f8;color:#42566e}.btn.secondary:disabled{opacity:.4;cursor:default}
+.btn.primary{background:var(--blue);color:white;box-shadow:0 8px 20px rgba(25,118,210,.24)}
+.btn.primary:hover{background:var(--blue2)}
+.btn.primary:disabled{opacity:.42;cursor:not-allowed;box-shadow:none}
+.intro{padding:34px}
+.intro h1{font-size:clamp(30px,5vw,47px);line-height:1.06;margin:0 0 15px}
+.intro p{font-size:18px;line-height:1.6;color:#42566e;margin:0 0 22px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 28px}.pill{background:#eef6ff;border:1px solid #cfe4fa;color:#225887;padding:8px 11px;border-radius:999px;font-size:14px;font-weight:800}
+.start-btn{width:100%;font-size:20px;padding:17px}
+.result{padding:30px}
+.result-head{text-align:center;padding:12px 0 27px}.score{font-size:clamp(54px,10vw,86px);font-weight:1000;line-height:1;color:var(--blue2)}
+.result-head h2{font-size:30px;margin:12px 0 7px}.grade{font-size:18px;font-weight:800;color:#4d627a}
+.errors-title{font-size:23px;margin:10px 0 15px}
+.error-card{border:1px solid #eadede;border-left:5px solid var(--bad);border-radius:16px;padding:17px;margin:12px 0;background:#fffafa}
+.error-card h3{font-size:18px;margin:0 0 10px}.wrong{color:var(--bad);font-weight:800;margin:6px 0}.right{color:var(--ok);font-weight:800;margin:6px 0}.explain{color:#566b82;line-height:1.5;margin:8px 0 0}
+.all-good{padding:22px;border-radius:16px;background:#ecfff4;border:1px solid #bde9cf;color:#126b3b;font-weight:900;text-align:center}
+.result-actions{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}.result-actions .btn{flex:1;min-width:210px}
+.source-note{margin-top:20px;font-size:12px;color:#738398;line-height:1.45;text-align:center}
+.hidden{display:none!important}
+@media(max-width:560px){.wrap{width:min(100% - 18px,900px);padding-top:10px}.top{margin:8px 5px 12px}.small{display:none}.card{border-radius:19px}.content,.header{padding-left:16px;padding-right:16px}.nav{padding:14px 16px 18px}.answer{font-size:16px;padding:14px 12px}.intro,.result{padding:24px 18px}.image-box{min-height:170px}.btn{padding:13px 15px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><div class="brand-badge">W2</div><span>WeDo 2.0 · тест</span></div>
+    <div class="small">20 вопросов · 3 варианта ответа</div>
+  </div>
+
+  <section id="intro" class="card intro">
+    <h1>Проверим знания WeDo 2.0</h1>
+    <p>Простой тест по механизмам, датчикам, мотору, программированию и инструкциям LEGO Education WeDo 2.0. Выбери один ответ в каждом вопросе.</p>
+    <div class="pills">
+      <span class="pill">Зубчатые передачи</span><span class="pill">Ременная передача</span><span class="pill">Червячная передача</span><span class="pill">Датчики</span><span class="pill">Мотор</span><span class="pill">Программы</span><span class="pill">Модели</span>
+    </div>
+    <button id="startBtn" class="btn primary start-btn">Начать тест</button>
+    <div class="source-note">В тесте используются изображения и учебные материалы LEGO Education WeDo 2.0 и Scratch. Для загрузки картинок нужен интернет.</div>
+  </section>
+
+  <section id="quiz" class="card hidden">
+    <div class="header">
+      <div class="progress-row"><div id="progressLabel" class="progress-label">Вопрос 1 из 20</div><div id="answeredLabel" class="small">Отвечено: 0</div></div>
+      <div class="progress"><div id="bar" class="bar"></div></div>
+    </div>
+    <div class="content">
+      <h2 id="question" class="question"></h2>
+      <div id="imageBox" class="image-box hidden"><img id="questionImage" alt="Изображение к вопросу"><div id="imageFallback" class="image-fallback">Картинка не загрузилась. Проверь подключение к интернету.</div></div>
+      <div id="answers" class="answers"></div>
+    </div>
+    <div class="nav"><button id="prevBtn" class="btn secondary">Назад</button><button id="nextBtn" class="btn primary" disabled>Дальше</button></div>
+  </section>
+
+  <section id="result" class="card result hidden">
+    <div class="result-head"><div id="score" class="score">0/20</div><h2 id="resultTitle"></h2><div id="grade" class="grade"></div></div>
+    <div id="errors"></div>
+    <div class="result-actions"><button id="retryBtn" class="btn primary">Пройти ещё раз</button><button id="printBtn" class="btn secondary">Распечатать результат</button></div>
+  </section>
+</div>
+<script>
+const IMG = {
+  milo: 'https://assets.education.lego.com/v3/assets/blt293eea581807678a/blt0e553009905e48ec/5ebe64a1a7506f408a57cf29/milo.jpg?auto=webp&fit=bounds&format=jpeg&quality=90&width=900',
+  miloInstructions: 'https://assets.education.lego.com/v3/assets/blt293eea581807678a/blt08373dff1d48be4f/5ebe647a4643246c23ddef59/milo-a-instructions-preview.png?auto=webp&fit=bounds&format=jpeg&quality=90&width=1200',
+  miloProgram: 'https://assets.education.lego.com/v3/assets/blt293eea581807678a/blt4b9ada70545becdd/5ebe5dda7cbab57baf994147/getting-started-a-program.png?auto=webp&fit=bounds&format=jpeg&quality=90&width=1200',
+  motion: 'https://assets.education.lego.com/v3/assets/blt293eea581807678a/blt718f106d21983dcc/5ebe64d177d06455007a7814/milo-motion-sensor.jpg?auto=webp&fit=bounds&format=jpeg&quality=90&width=900',
+  motionProgram: 'https://assets.education.lego.com/v3/assets/blt293eea581807678a/blt0ab4983f82614b29/5ebe5dc3b112c256a78f3310/getting-started-b-program.png?auto=webp&fit=bounds&format=jpeg&quality=90&width=1200',
+  tilt: 'https://assets.education.lego.com/v3/assets/blt293eea581807678a/blt7f1fcd3f07844bcb/5ebe64da2a79326d92da759b/milo-tilt-sensor.jpg?auto=webp&fit=bounds&format=jpeg&quality=90&width=900',
+  tiltInstructions: 'https://assets.education.lego.com/v3/assets/blt293eea581807678a/blt01ec535f9a7c6f4e/5fc4cc3609ed4c6f277f14c0/milo-c-instructions-preview-c6a744b14863e07aa95c721f3c70594e.png?auto=webp&fit=bounds&format=jpeg&quality=90&width=1200',
+  tiltProgram: 'https://assets.education.lego.com/v3/assets/blt293eea581807678a/blt5041759182dac187/5ebe5dbc47b43755bb89fc9c/getting-started-c-program.png?auto=webp&fit=bounds&format=jpeg&quality=90&width=1200',
+  raceInstructions: 'https://assets.education.lego.com/v3/assets/blt293eea581807678a/bltf5f914078d1dbd74/5ebe6484c004e16e599239d5/race-car-instructions-preview.png?auto=webp&fit=bounds&format=jpeg&quality=90&width=1200',
+  raceProgram: 'https://assets.education.lego.com/v3/assets/blt293eea581807678a/bltc4704b768a2ce55d/5ebe5e0535907b55c17af46f/race-car-program.png?auto=webp&fit=bounds&format=jpeg&quality=90&width=1200',
+  race: 'https://assets.education.lego.com/v3/assets/blt293eea581807678a/blt759c50a2fdec3f8e/5ebe5e21a69d0f1370cabdda/race-car.png?auto=webp&fit=bounds&format=jpeg&quality=90&width=1200',
+  pulleys: 'https://assets.education.lego.com/v3/assets/blt293eea581807678a/blt87a288c02b9a907d/5ebe5e0bbcdebb4171adad9f/pulley-configurations.png?auto=webp&fit=bounds&format=jpeg&quality=90&width=1200',
+  motor: 'https://raw.githubusercontent.com/wanght86/scratch-www/0562b43587aab2932c85e1cd3fea6ea7755822bf/static/images/wedo2/wedo2-motor.png',
+  motorBlock: 'https://raw.githubusercontent.com/wanght86/scratch-www/0562b43587aab2932c85e1cd3fea6ea7755822bf/static/images/wedo2/wedo2-motor-turn-block.png',
+  connect: 'https://raw.githubusercontent.com/wanght86/scratch-www/0562b43587aab2932c85e1cd3fea6ea7755822bf/static/images/wedo2/wedo2-connect-1.png'
+};
+
+const BASE_Q = [
+ {q:'Как называется этот робот?',img:IMG.milo,a:['Майло (Milo)','Гоночная машина','Спутник'],c:0,e:'Это Milo, научный вездеход из вводных проектов WeDo 2.0.'},
+ {q:'Что делает эта деталь WeDo 2.0?',img:IMG.motor,a:['Приводит модель в движение','Измеряет расстояние','Подключает Wi‑Fi'],c:0,e:'Это средний мотор. Он вращает ось и приводит механизм в движение.'},
+ {q:'Что помогает Майло заметить предмет перед собой?',img:IMG.motion,a:['Датчик движения (расстояния)','Датчик наклона','Ремень'],c:0,e:'Motion Sensor реагирует на изменение расстояния до объекта.'},
+ {q:'Что определяет датчик наклона?',img:IMG.tilt,a:['Как наклонена или потрясена модель','Цвет детали','Скорость интернета'],c:0,e:'Tilt Sensor определяет направления наклона, отсутствие наклона и встряхивание.'},
+ {q:'Что показано на картинке?',img:IMG.pulleys,a:['Ременная передача со шкивами','Червячная передача','Цепная передача'],c:0,e:'Два шкива соединены ремнём. Это ременная передача.'},
+ {q:'Если маленький шкив крутит большой, что обычно происходит с ведомой осью?',img:IMG.pulleys,a:['Она вращается медленнее','Она всегда вращается быстрее','Она совсем не может вращаться'],c:0,e:'Маленький ведущий шкив и большой ведомый обычно уменьшают скорость вращения.'},
+ {q:'Как называется зубчатое колесо, которое передаёт вращение другому зубчатому колесу?',a:['Шестерёнка','Балка','Втулка'],c:0,e:'Зубчатое колесо в механизме называют шестерёнкой.'},
+ {q:'Две обычные шестерёнки сцеплены друг с другом. Первая вращается по часовой стрелке. Куда вращается вторая?',a:['Против часовой стрелки','Тоже по часовой стрелке','Не вращается'],c:0,e:'Сцепленные внешние шестерёнки вращаются в противоположных направлениях.'},
+ {q:'Какая деталь похожа на винт и работает вместе с шестерёнкой?',a:['Червячная шестерня','Шкив','Колесо'],c:0,e:'Червячная шестерня похожа на винт и зацепляется с обычной шестерёнкой.'},
+ {q:'Для чего часто используют червячную передачу?',a:['Чтобы сильно уменьшить скорость и увеличить усилие','Чтобы измерять наклон','Чтобы подключить Bluetooth'],c:0,e:'Червячная передача даёт большое понижение скорости и может увеличить усилие.'},
+ {q:'Что нужно сделать по этой инструкции?',img:IMG.miloInstructions,a:['Собирать модель по шагам','Выбрать случайные детали','Сначала написать длинный текст'],c:0,e:'Строительные инструкции показывают сборку модели шаг за шагом.'},
+ {q:'Что лучше сделать перед переходом к следующему шагу инструкции?',a:['Проверить, что текущий шаг собран правильно','Разобрать всю модель','Поменять все цвета деталей'],c:0,e:'Проверка текущего шага помогает не переносить ошибку дальше по сборке.'},
+ {q:'Что делает программа Майло на этой картинке?',img:IMG.miloProgram,a:['Запускает мотор, едет некоторое время и останавливается','Только включает звук','Только ждёт датчик наклона'],c:0,e:'В вводном проекте Milo мотор запускается с заданной мощностью, работает 2 секунды и останавливается.'},
+ {q:'Что произойдёт, если увеличить мощность мотора?',img:IMG.motorBlock,a:['Мотор обычно будет вращаться быстрее','Мотор превратится в датчик','Робот обязательно поедет назад'],c:0,e:'Мощность управляет скоростью работы мотора. Направление задаётся отдельно.'},
+ {q:'Для чего нужен блок остановки мотора?',a:['Чтобы остановить вращение мотора','Чтобы включить датчик наклона','Чтобы изменить цвет деталей'],c:0,e:'Блок остановки прекращает вращение подключённого мотора.'},
+ {q:'Что делает эта программа после обнаружения объекта?',img:IMG.motionProgram,a:['Останавливает мотор и включает звук','Ускоряет мотор навсегда','Выключает компьютер'],c:0,e:'В проекте с Motion Sensor Milo останавливается после обнаружения объекта и проигрывает звук.'},
+ {q:'Что может сделать программа при наклоне датчика вверх?',img:IMG.tiltProgram,a:['Показать сообщение на устройстве','Снять колесо','Зарядить батарейки'],c:0,e:'В учебном проекте наклон вверх используется как команда для вывода сообщения.'},
+ {q:'Какой механизм используется в гоночной машине WeDo 2.0?',img:IMG.race,a:['Ременная передача','Червячная передача без ремня','Только рычаг'],c:0,e:'В официальном проекте Race Car привод использует шкивы и ремень.'},
+ {q:'Что может повлиять на скорость этой машины?',img:IMG.raceInstructions,a:['Мощность мотора и размер колёс','Название робота','Цвет фона программы'],c:0,e:'В проекте Speed исследуются мощность мотора, размер колёс и конфигурация шкивов.'},
+ {q:'Как Smart Hub WeDo 2.0 связывается с компьютером или планшетом?',img:IMG.connect,a:['Через Bluetooth Low Energy','Через датчик наклона','Через ременную передачу'],c:0,e:'Smart Hub WeDo 2.0 использует Bluetooth Low Energy для беспроводной связи.'}
+];
+
+let Q=[], index=0, answers=[];
+const intro=document.getElementById('intro'),quiz=document.getElementById('quiz'),result=document.getElementById('result');
+const qEl=document.getElementById('question'), answersEl=document.getElementById('answers'), imgBox=document.getElementById('imageBox'), img=document.getElementById('questionImage'), fallback=document.getElementById('imageFallback');
+const prev=document.getElementById('prevBtn'), next=document.getElementById('nextBtn'), bar=document.getElementById('bar'), progressLabel=document.getElementById('progressLabel'), answeredLabel=document.getElementById('answeredLabel');
+
+function shuffledQuestions(){
+ return BASE_Q.map(item=>{
+   const options=item.a.map((text,i)=>({text,correct:i===item.c}));
+   for(let i=options.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[options[i],options[j]]=[options[j],options[i]];}
+   return {...item,a:options.map(o=>o.text),c:options.findIndex(o=>o.correct)};
+ });
+}
+function showQuiz(){intro.classList.add('hidden');result.classList.add('hidden');quiz.classList.remove('hidden');Q=shuffledQuestions();index=0;answers=Array(Q.length).fill(null);render();window.scrollTo({top:0,behavior:'smooth'});}
+function render(){
+ const item=Q[index]; qEl.textContent=item.q; answersEl.innerHTML='';
+ progressLabel.textContent=`Вопрос ${index+1} из ${Q.length}`;
+ answeredLabel.textContent=`Отвечено: ${answers.filter(v=>v!==null).length}`;
+ bar.style.width=`${((index+1)/Q.length)*100}%`;
+ prev.disabled=index===0; next.disabled=answers[index]===null; next.textContent=index===Q.length-1?'Завершить тест':'Дальше';
+ if(item.img){imgBox.classList.remove('hidden');fallback.style.display='none';img.style.display='block';img.src=item.img;img.alt='Картинка к вопросу '+(index+1);img.onerror=()=>{img.style.display='none';fallback.style.display='block';};}
+ else{imgBox.classList.add('hidden');img.removeAttribute('src');}
+ item.a.forEach((text,i)=>{const b=document.createElement('button');b.className='answer'+(answers[index]===i?' selected':'');b.innerHTML=`<span class="letter">${String.fromCharCode(65+i)}</span><span>${text}</span>`;b.onclick=()=>{answers[index]=i;render();};answersEl.appendChild(b);});
+}
+function finish(){
+ const correct=Q.reduce((n,item,i)=>n+(answers[i]===item.c),0); const pct=Math.round(correct/Q.length*100);
+ quiz.classList.add('hidden');result.classList.remove('hidden');
+ document.getElementById('score').textContent=`${correct}/${Q.length}`;
+ let title,grade;if(pct>=90){title='Отличный результат';grade=`${pct}% · Отлично`;}else if(pct>=75){title='Хороший результат';grade=`${pct}% · Хорошо`;}else if(pct>=55){title='Неплохо';grade=`${pct}% · Нужно немного повторить`;}else{title='Нужно повторить основы';grade=`${pct}% · Повтори основные темы и попробуй ещё раз`;}
+ document.getElementById('resultTitle').textContent=title;document.getElementById('grade').textContent=grade;
+ const errors=document.getElementById('errors'), wrong=Q.map((q,i)=>({q,i})).filter(x=>answers[x.i]!==x.q.c);errors.innerHTML='';
+ if(!wrong.length){errors.innerHTML='<div class="all-good">Все 20 ответов правильные.</div>';}else{
+  const h=document.createElement('h3');h.className='errors-title';h.textContent=`Ошибки: ${wrong.length}`;errors.appendChild(h);
+  wrong.forEach(({q,i})=>{const d=document.createElement('div');d.className='error-card';d.innerHTML=`<h3>${i+1}. ${q.q}</h3><div class="wrong">Твой ответ: ${answers[i]===null?'нет ответа':q.a[answers[i]]}</div><div class="right">Правильный ответ: ${q.a[q.c]}</div><div class="explain">${q.e}</div>`;errors.appendChild(d);});
+ }
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.getElementById('startBtn').onclick=showQuiz;
+prev.onclick=()=>{if(index>0){index--;render();window.scrollTo({top:0,behavior:'smooth'});}};
+next.onclick=()=>{if(answers[index]===null)return;if(index<Q.length-1){index++;render();window.scrollTo({top:0,behavior:'smooth'});}else finish();};
+document.getElementById('retryBtn').onclick=showQuiz;
+document.getElementById('printBtn').onclick=()=>window.print();
+</script>
+</body>
+</html>
